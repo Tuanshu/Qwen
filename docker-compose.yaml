@@ -8,11 +8,14 @@ services:
       - "${PORT:-8000}:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${QWEN_CHECKPOINT_PATH}:/data/shared/Qwen/Qwen-Chat
+      # - ${QWEN_CHECKPOINT_PATH}:/data/shared/Qwen/Qwen-Chat
+      - /data/.cache/huggingface:/root/.cache/huggingface
+
     environment:
       - QWEN_CHECKPOINT_PATH=${QWEN_CHECKPOINT_PATH}
       - PORT=${PORT:-8000}
-    command: python openai_api.py --server-port 80 --server-name 0.0.0.0 -c /data/shared/Qwen/Qwen-Chat/
+    # command: python openai_api.py --server-port 80 --server-name 0.0.0.0 -c /data/shared/Qwen/Qwen-Chat/
+    command: python openai_api.py --server-port 80 --server-name 0.0.0.0 -c Qwen/Qwen-14B-Chat
     restart: always
     deploy:
       resources:
