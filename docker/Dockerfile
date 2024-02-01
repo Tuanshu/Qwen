@@ -47,7 +47,7 @@ fi
 EOF
 
 FROM bundle_req as bundle_flash_attention
-ARG BUNDLE_FLASH_ATTENTION=true
+ARG BUNDLE_FLASH_ATTENTION=f
 
 RUN <<EOF 
 if [ "$BUNDLE_FLASH_ATTENTION" = "true" ]; then
