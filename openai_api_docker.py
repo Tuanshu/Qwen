@@ -202,6 +202,7 @@ def parse_messages(messages, functions):
             system = ""
 
     if functions:
+        print('[ts] function detected.')
         tools_text = []
         tools_name_text = []
         for func_info in functions:
@@ -259,7 +260,9 @@ def parse_messages(messages, functions):
             last_msg_has_zh = len(re.findall(r"[\u4e00-\u9fff]+", last_msg)) > 0
             if func_call is None:
                 if functions:
-                    content = dummy_thought["zh" if last_msg_has_zh else "en"] + content
+                    detected_locale="zh" if last_msg_has_zh else "en"
+                    print(f'[ts] detected_locale={detected_locale} (func_call is none?)')
+                    content = dummy_thought[detected_locale] + content
             else:
                 f_name, f_args = func_call["name"], func_call["arguments"]
                 if not content:
@@ -268,6 +271,8 @@ def parse_messages(messages, functions):
                     else:
                         content = f"Thought: I can use {f_name}."
                 content = f"\n{content}\nAction: {f_name}\nAction Input: {f_args}"
+                print(f'[ts] content={content}')
+
             if messages[-1].role == "user":
                 messages.append(
                     ChatMessage(role="assistant", content=content.lstrip("\n").rstrip())
@@ -290,7 +295,7 @@ def parse_messages(messages, functions):
 
     if len(messages) % 2 != 0:
         raise HTTPException(status_code=400, detail="Invalid request")
-
+    print(f'[ts] messages={messages}')
     history = []  # [(Q1, A1), (Q2, A2), ..., (Q_last_turn, A_last_turn)]
     for i in range(0, len(messages), 2):
         if messages[i].role == "user" and messages[i + 1].role == "assistant":
@@ -399,8 +404,11 @@ async def create_chat_completion(request: ChatCompletionRequest):
             stop_words.append("Observation:")
 
     query, history = parse_messages(request.messages, request.functions)
+    print(f'[ts] query={query}')
+    print(f'[ts] history={history}')
 
     if request.stream:
+        print('[ts] request is stream.')
         if request.functions:
             raise HTTPException(
                 status_code=400,
