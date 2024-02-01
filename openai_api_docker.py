@@ -550,6 +550,7 @@ if __name__ == "__main__":
         device_map=device_map,
         trust_remote_code=True,
         resume_download=True,
+        use_flash_attn=False
     ).eval()
 
     model.generation_config = GenerationConfig.from_pretrained(

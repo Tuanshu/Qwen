@@ -10,7 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       # - ${QWEN_CHECKPOINT_PATH}:/data/shared/Qwen/Qwen-Chat
       - /data/.cache/huggingface:/root/.cache/huggingface
-      - ./openai_api_docker.py:~/openai_api_docker.py
+      - ./openai_api_docker.py:/data/shared/Qwen/openai_api.py
 
     environment:
       - QWEN_CHECKPOINT_PATH=${QWEN_CHECKPOINT_PATH}
